@@ -22,6 +22,7 @@ function DBQuery($sql)
     $res = mysql_query($sql);
     if (!$res) {
         echo mysql_error();
+        DBClose();
         return [];
     }
 
@@ -30,5 +31,12 @@ function DBQuery($sql)
     {
         $ret[] = $row;
     }
+    DBClose();
     return $ret;
+}
+
+function DBClose()
+{
+    $config = config();
+    mysql_close($config['db']['dbname']);
 }
