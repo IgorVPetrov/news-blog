@@ -2,6 +2,8 @@
 
 require_once __DIR__ . '/models/news.php';
 
-$news = News_getAll();
+$news = new News();
+
+$articles = $news->getAll();
 
 include 'view/index.php';

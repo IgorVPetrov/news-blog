@@ -13,7 +13,7 @@
         <div>
             <fieldset>
                 <legend>Добавьте новость</legend> 
-                <form action="/../models/addnews.php" method="POST">
+                <form action="addnews.php" method="POST">
                     <span>Заголовок</span><br/>
                     <input type="text" name="title"><br/>
                     <span>Текст новости</span><br/>

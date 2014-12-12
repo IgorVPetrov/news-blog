@@ -1,62 +1,39 @@
 <?php
 
-require_once __DIR__ . '/../functions/db.php';
+require_once 'clause.php';
+require_once 'db.php';
 
-function News_getAll()
-{
-    return DBQuery("
-    SELECT * FROM news
-    ");
-}
-
-function Add_News()
-{
-    if(isset($_POST["title"])&&isset($_POST["text"]))
-    {
-        $title = mysql_real_escape_string($_POST["title"]);
-        $text = mysql_real_escape_string($_POST["text"]);
+class News extends Clause{
     
+    private $db;
     
-        if( false !== $title && false !== $text 
-            && 0 !== strlen($title) &&  0 !== strlen($text))
-        {
-        
-            DBQuery("
-                    INSERT 
-                    INTO `news`(`title`,`text`)
-                    VALUES('$title' , '$text')
-            "); 
-            
-            echo "Новость добавлена";
-        }
-        else
-        {
-            echo "Заполните форму";
-        
-        }
-    }
-    else 
+    public function __construct()
     {
-        echo "Функция вызвана неверно";
+        $this->db = new DataBase();   
     }
-}
-
-function GetNewsById($id)
-{
-    if(isset($_GET['id']))
+    
+    public function getAll()
     {
-
-        $id = mysql_real_escape_string($_GET["id"]);
-      
-        $res = DBQuery("
+        return $this->db->query("
+               SELECT * FROM news
+               ");  
+    }
+    
+    public function getById($id)
+    {
+        $res = $this->db->query("
             SELECT * FROM `news` WHERE `id`='$id'
         ");
         return $res[0];
+        
     }
-    else 
+    
+    public function add($title,$text)
     {
-        return [];
+        $this->db->query("
+                    INSERT 
+                    INTO `news`(`title`,`text`)
+                    VALUES('$title' , '$text')
+                   "); 
     }
-    
-    
 }
