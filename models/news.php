@@ -3,7 +3,7 @@
 require_once 'clause.php';
 require_once 'db.php';
 
-class News extends Clause{
+class News_Model extends Clause{
     
     private $db;
     
@@ -22,8 +22,8 @@ class News extends Clause{
     public function getById($id)
     {
         $res = $this->db->query("
-            SELECT * FROM `news` WHERE `id`='$id'
-        ");
+            SELECT * FROM `news` WHERE `id`=" . $id 
+        );
         return $res[0];
         
     }
@@ -33,7 +33,7 @@ class News extends Clause{
         $this->db->query("
                     INSERT 
                     INTO `news`(`title`,`text`)
-                    VALUES('$title' , '$text')
+                    VALUES('" . $title . "' , '" . $text ."')
                    "); 
     }
 }

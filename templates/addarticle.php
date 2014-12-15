@@ -13,7 +13,7 @@
         <div>
             <fieldset>
                 <legend>Добавьте новость</legend> 
-                <form action="addnews.php" method="POST">
+                <form action="addarticle.php" method="POST">
                     <span>Заголовок</span><br/>
                     <input type="text" name="title"><br/>
                     <span>Текст новости</span><br/>
@@ -21,6 +21,9 @@
                     <input type="submit" value="Отправить"/>
                 </form>
             </fieldset>
+            <?php if(isset($message)): ?>
+                <?=$message;?>
+            <?php endif; ?>
         </div>
     </body>
 </html>

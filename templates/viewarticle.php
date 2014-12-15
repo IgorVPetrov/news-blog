@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Новость <?=$article['id'];?></title>
+    <title>Просмотр новости по ID</title>
     <meta charset="UTF-8">
     <style>
         fieldset{width: 250px;}   
@@ -11,12 +11,10 @@
 </head>
 <body>
     
-    <?php include 'newsgetform.html.php'; ?>
+    <?php require 'articlegetform.php'; ?>
     
-    <?php if(null === $article): ?>
-        <?php if(null !== $id): ?>
-           Нет новости с таким номером
-        <?php endif; ?>   
+    <?php if(isset($message)): ?>
+        <?=$message;?>   
     <?php else: ?>
         <h1><?=$article['title'] . " " . $article['id'];?></h1>
         <div><?=$article['text'];?></div>

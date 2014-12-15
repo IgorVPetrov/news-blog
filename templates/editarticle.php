@@ -12,7 +12,7 @@
 </head>
 <body>
     
-    <?php include 'newsgetform.html.php'; ?>
+    <?php include 'newsgetform.php'; ?>
     
     <?php if(null === $article && isset($_GET['id'])): ?>
     "Нет новости с таким номером
