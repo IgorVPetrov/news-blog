@@ -1,7 +1,5 @@
 <?php
 
-require_once 'storage.php';
-
 class View extends Storage {
     
     private $template_path;

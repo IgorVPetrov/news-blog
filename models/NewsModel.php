@@ -1,15 +1,12 @@
 <?php
 
-require_once 'clause.php';
-require_once 'db.php';
-
-class News_Model extends Clause{
+class NewsModel extends Clause{
     
     private $db;
     
     public function __construct()
     {
-        $this->db = new DataBase();   
+        $this->db = new Db();   
     }
     
     public function getAll()

@@ -13,12 +13,13 @@
         <div>
             <fieldset>
                 <legend>Добавьте новость</legend> 
-                <form action="addarticle.php" method="POST">
+                <form action=<?=$url ;?> method="POST">
                     <span>Заголовок</span><br/>
                     <input type="text" name="title"><br/>
                     <span>Текст новости</span><br/>
                     <textarea name="text" cols="40" rows="8"/></textarea><br/>
                     <input type="submit" value="Отправить"/>
+                    
                 </form>
             </fieldset>
             <?php if(isset($message)): ?>
