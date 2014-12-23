@@ -6,11 +6,9 @@ class NewsController extends AController{
              
         $template_path = __DIR__ . '/../views/';
 
-        $news_model = new NewsModel();
-
         $view = new View($template_path);
-
-        $view->news = $news_model->getAll();
+        
+        $view->news = NewsModel::findAll();
 
         $html = $view->display('index.php');
 
