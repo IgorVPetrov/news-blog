@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Добавить новость</title>
+        <title>Редактировать новость</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="../css/styles.css">
     </head>
     <body>
-        <div id="page-index">
+        <div id="page-adminindex">
         
-        <?php include "menu.php"; ?>
+        <?php include "adminmenu.php"; ?>
     
         <?=$message;?> 
             
@@ -16,5 +16,4 @@
         
     </body>
 </html>
- 
 

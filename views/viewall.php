@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Просмотр новости по ID</title>
-    <meta charset="UTF-8">
+    <title>Новости</title>
+    <meta charset="utf-8"/>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
@@ -10,17 +10,12 @@
         
         <?php include "menu.php"; ?>
     
-        <?php if(isset($message)): ?>
-            <?=$message;?>   
-        <?php else: ?>
-            <div class="news-number">ID=<?=$article->id;?></div>
+        <?php foreach ($news as $article): ?>
             <div class="title"><?=$article->title;?></div>
             <div class="text"><?=$article->text;?></div>
-        <?php endif; ?>
+         <?php endforeach; ?>
         
-    </div>     
-    
-    
+    </div>
 </body>
 </html>
 

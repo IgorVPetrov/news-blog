@@ -2,13 +2,14 @@
 <html>
 <head>
     <title>Новости</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
-    <?php foreach ($news as $article): ?>
-    <article>
-        <h1><?=$article->title;?></h1>
-        <div><?=$article->text;?></div>
-    </article>
-    <?php endforeach; ?>
+    <div id="page-index">
+        
+        <?php include "menu.php"; ?>
+ 
+    </div>
 </body>
 </html>

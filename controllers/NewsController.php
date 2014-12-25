@@ -2,102 +2,100 @@
 
 class NewsController extends AController{
     
+    protected function actionIndex(){
+        $template_path = __DIR__ . '/../views/';
+
+        $view = new View($template_path);
+         
+        $html = $view->display('index.php');
+
+        echo $html;  
+    }
+    
+    
     protected function actionAll(){
              
         $template_path = __DIR__ . '/../views/';
 
         $view = new View($template_path);
-        
+         
         $view->news = NewsModel::findAll();
 
-        $html = $view->display('index.php');
+        $html = $view->display('viewall.php');
 
         echo $html;
+    }
+    
+    protected function actionGet_addform(){
+        
+        $template_path = __DIR__ . '/../views/';
+        
+        $view = new View($template_path);
+           
+        $html = $view->display('addform.php');
+
+        echo $html;
+        
+    }
+        protected function actionGet_viewform(){
+        
+        $template_path = __DIR__ . '/../views/';
+        
+        $view = new View($template_path);
+        
+        $html = $view->display('viewform.php');
+
+        echo $html;
+        
     }
     
     protected function actionAdd()
     {
         $template_path = __DIR__ . '/../views/';
-
+        
         $view = new View($template_path);
         
-        $view->url = 'index.php?route=news/add';
-
         if(isset($_POST["title"])&&isset($_POST["text"]))
         {
-            $title = mysql_real_escape_string($_POST["title"]);
-            $text = mysql_real_escape_string($_POST["text"]);
-    
-            if( false !== $title && false !== $text 
-              && 0 !== strlen($title) &&  0 !== strlen($text))
-            {
-                $news_model = new NewsModel();
-                $news_model->add($title, $text);
+            $news_model = new NewsModel();
+            $news_model->title = $_POST["title"];
+            $news_model->text = $_POST["text"];
+            
+            try{
+                $news_model->save();
                 $view->message = "Новость добавлена";
             }
-            else
+            catch(PDOExceptionException $e)
             {
-                $view->message =  "Заполните форму";
+                $view->message = "Что то пошло не так";
             }
         }
+        else
+        {
+            $view->message = "Неверный запрос";   
+        }
         $html = $view->display('addarticle.php');
-
         echo $html;
         
     }
     protected function actionOne(){
 
-       
         $template_path = __DIR__ . '/../views/';
 
         $view = new View($template_path);
         
-        $view->url = 'index.php';
+        try{
+            $view->article = NewsModel::findByPk($_GET["id"]);
+            if(null === $view->article){
+                $view->message = "Нет такой новости";   
+            } 
+        }
+        catch(PDOException $e)
+        {
+            $view->message = "Проверьте корректность ввода номера";   
+        }
         
-        $view->action = 'route=news/one';
-
-        if(!isset($_GET["id"])) {
-    
-            //если просто загрузили эту страницу
-            $view->message = "";
-        }
-        else if("" === $_GET["id"] ) {
-    
-            //если нажали "Отправить" но не ввели номер
-            $view->message = "Введите номер новости";
-        }
-        else {
-    
-            $id = trim($_GET["id"]);
-   
-            //проверяем , состоит ли номер только из цифр
-            if(0 !== preg_match("~^[0-9]+$~", $id )){
-       
-                $news_model = new NewsModel();
-                //проверяем есть ли новость с таким номером
-                if(null !== $article = $news_model->getById($id)){
-  
-                    $view->article = $article;
-                }
-                else{
-           
-                    $view->message = "Нeт новости с таким номером";
-                }
-            }  
-            else{
-       
-                $view->message = "Номер новости должен быть числом";
-       
-            }
-
-        }
-
         $html = $view->display('viewarticle.php');
-
-        echo $html;
-        
-        
-        
-        
+        echo $html;   
     }
 }

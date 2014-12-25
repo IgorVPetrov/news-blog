@@ -17,7 +17,7 @@ class Router{
         }
         else {
           $this->controller = 'news'; 
-          $this->action = 'all';   
+          $this->action = 'index';   
         }   
     
     }     
