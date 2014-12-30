@@ -1,0 +1,9 @@
+{% extends "adminview.html.twig" %}
+
+{% block content2 %}
+    {% if message%}
+        {{message}}    
+    {% else %}    
+        {{ include('addeditform.html.twig') }}
+    {% endif %}
+{% endblock %}

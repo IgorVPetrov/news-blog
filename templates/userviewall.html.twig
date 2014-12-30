@@ -1,0 +1,17 @@
+{% extends "userview.html.twig" %}
+
+{% block content2 %}
+    {% for article in news %}
+        <div class="title">{{article.title}}</div>
+        <div class="text">{{article.text}}</div>
+    {% else %}
+        <div>Нет новостей</div>
+    {% endfor %}   
+{% endblock %}
+
+
+
+
+
+
+

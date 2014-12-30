@@ -1,59 +1,56 @@
 <?php
+namespace Mynewsblog\controllers;
+use \Mynewsblog\classes\Menu as Menu;
+use \Mynewsblog\models\NewsModel as NewsModel;
+
 
 class NewsController extends AController{
     
-    protected function actionIndex(){
-        $template_path = __DIR__ . '/../views/';
-
-        $view = new View($template_path);
-         
-        $html = $view->display('index.php');
-
-        echo $html;  
-    }
+    private $menu;
     
-    
-    protected function actionAll(){
-             
-        $template_path = __DIR__ . '/../views/';
-
-        $view = new View($template_path);
-         
-        $view->news = NewsModel::findAll();
-
-        $html = $view->display('viewall.php');
-
-        echo $html;
-    }
-    
-    protected function actionGet_addform(){
-        
-        $template_path = __DIR__ . '/../views/';
-        
-        $view = new View($template_path);
-           
-        $html = $view->display('addform.php');
-
-        echo $html;
-        
-    }
-        protected function actionGet_viewform(){
-        
-        $template_path = __DIR__ . '/../views/';
-        
-        $view = new View($template_path);
-        
-        $html = $view->display('viewform.php');
-
-        echo $html;
+    public function __construct(){
+        parent::__construct();
+        $this->menu = Menu::getMenu('config_umenu');
         
     }
     
-    protected function actionAdd()
+
+    public function actionIndex(){
+        
+        $template = $this->twig->loadTemplate('userview.html.twig');
+        echo $template->render(array('menu' => $this->menu));
+        
+    }
+    
+    
+    public function actionAll(){
+                 
+        $template = $this->twig->loadTemplate('userviewall.html.twig');
+        $news = NewsModel::findAll();
+        echo $template->render(array('menu' => $this->menu, 'news' => $news ));
+        
+    }
+    
+    public function actionGet_addform(){
+        
+        $template = $this->twig->loadTemplate('useraddform.html.twig');
+        $form['action'] = '/news/add';
+        $form['title']  = 'Добавьте новость';       
+        echo $template->render(array('menu' => $this->menu, 'form' => $form, ));
+        
+    }
+    public function actionGet_viewform(){
+        
+        $template = $this->twig->loadTemplate('userviewidform.html.twig');
+        $form['action'] = '/news/one';
+        $form['title']  = 'Посмотреть новость';       
+        echo $template->render(array('menu' => $this->menu, 'form' => $form, ));
+        
+    }
+    
+    public function actionAdd()
     {
-        $template_path = __DIR__ . '/../views/';
-        
-        $view = new View($template_path);
+        $message;
         
         if(isset($_POST["title"])&&isset($_POST["text"]))
         {
@@ -63,39 +60,43 @@ class NewsController extends AController{
             
             try{
                 $news_model->save();
-                $view->message = "Новость добавлена";
+                $message = "Новость добавлена";
             }
-            catch(PDOExceptionException $e)
+            catch(\PDOException $e)
             {
-                $view->message = "Что то пошло не так";
+                $message = "Что то пошло не так";
             }
         }
         else
         {
-            $view->message = "Неверный запрос";   
+            $message = "Неверный запрос";   
         }
-        $html = $view->display('addarticle.php');
-        echo $html;
+        $template = $this->twig->loadTemplate('useradd.html.twig');     
+        echo $template->render(array('menu' => $this->menu, 'message' => $message, ));
         
     }
-    protected function actionOne(){
-
-        $template_path = __DIR__ . '/../views/';
-
-        $view = new View($template_path);
+    public function actionOne(){
         
+        $message=null;
+        $article=null;
         try{
-            $view->article = NewsModel::findByPk($_GET["id"]);
-            if(null === $view->article){
-                $view->message = "Нет такой новости";   
+            $article = NewsModel::findByPk($_GET["id"]);
+            if(false === $article){
+                $message = "Нет такой новости";   
             } 
         }
-        catch(PDOException $e)
+        catch(\PDOException $e)
         {
-            $view->message = "Проверьте корректность ввода номера";   
+            $message = "Проверьте корректность ввода номера";   
         }
         
-        $html = $view->display('viewarticle.php');
-        echo $html;   
+        $template = $this->twig->loadTemplate('userviewarticle.html.twig');
+        echo $template->render(array(
+            'menu' => $this->menu, 
+            'article' => $article,
+            'message' => $message,
+            ));
+        
+           
     }
 }

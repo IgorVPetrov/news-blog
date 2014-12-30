@@ -1,77 +1,72 @@
 <?php
+namespace Mynewsblog\controllers;
+use \Mynewsblog\classes\Menu as Menu;
+use \Mynewsblog\models\NewsModel as NewsModel;
 
 class AdminController extends AController{
     
-    protected function actionIndex(){
-        $template_path = __DIR__ . '/../views/';
+    
+    private $menu;
+    
+    public function __construct(){
+        parent::__construct();
+        $this->menu = Menu::getMenu('config_amenu');
+        
+    }
 
-        $view = new View($template_path);
-         
-        $html = $view->display('adminindex.php');
-
-        echo $html;  
+    public function actionIndex(){
+        $template = $this->twig->loadTemplate('adminview.html.twig');
+        echo $template->render(array('menu' => $this->menu)); 
     }
     
-    protected function actionAll(){
+    public function actionAll(){
              
-        $template_path = __DIR__ . '/../views/';
-
-        $view = new View($template_path);
-         
-        $view->news = NewsModel::findAll();
-
-        $html = $view->display('adminviewall.php');
-
-        echo $html;
+        $template = $this->twig->loadTemplate('adminviewall.html.twig');
+        $news = NewsModel::findAll();
+        echo $template->render(array('menu' => $this->menu, 'news' => $news ));
     } 
     
-    protected function actionGet_viewform(){
+    public function actionGet_viewform(){
         
-        $template_path = __DIR__ . '/../views/';
-        
-        $view = new View($template_path);
-        
-        $html = $view->display('adminviewform.php');
-
-        echo $html;
+        $template = $this->twig->loadTemplate('admingetidform.html.twig');
+        $form['action'] = '/admin/one';
+        $form['title']  = 'Посмотреть новость';       
+        echo $template->render(array('menu' => $this->menu, 'form' => $form, ));
         
     }    
-    protected function actionOne(){
+    public function actionOne(){
 
-        $template_path = __DIR__ . '/../views/';
-
-        $view = new View($template_path);
-        
+        $message=null;
+        $article=null;
         try{
-            $view->article = NewsModel::findByPk($_GET["id"]);
-            if(null === $view->article){
-                $view->message = "Нет такой новости";   
+            $article = NewsModel::findByPk($_GET["id"]);
+            if(false === $article){
+                $message = "Нет такой новости";   
             } 
         }
-        catch(PDOException $e)
+        catch(\PDOException $e)
         {
-            $view->message = "Проверьте корректность ввода номера";   
+            $message = "Проверьте корректность ввода номера";   
         }
         
-        $html = $view->display('adminviewarticle.php');
-        echo $html;   
+        $template = $this->twig->loadTemplate('adminviewarticle.html.twig');
+        echo $template->render(array(
+            'menu' => $this->menu, 
+            'article' => $article,
+            'message' => $message,
+            ));  
     }
-    protected function actionGet_addform(){
+    public function actionGet_addform(){
         
-        $template_path = __DIR__ . '/../views/';
-        
-        $view = new View($template_path);
-           
-        $html = $view->display('adminaddform.php');
-
-        echo $html;
+        $template = $this->twig->loadTemplate('adminaddform.html.twig');
+        $form['action'] = '/admin/add';
+        $form['title']  = 'Добавьте новость';       
+        echo $template->render(array('menu' => $this->menu, 'form' => $form, ));
         
     }
-    protected function actionAdd()
+    public function actionAdd()
     {
-        $template_path = __DIR__ . '/../views/';
-        
-        $view = new View($template_path);
+        $message;
         
         if(isset($_POST["title"])&&isset($_POST["text"]))
         {
@@ -81,59 +76,62 @@ class AdminController extends AController{
             
             try{
                 $news_model->save();
-                $view->message = "Новость добавлена";
+                $message = "Новость добавлена";
             }
-            catch(PDOExceptionException $e)
+            catch(\PDOException $e)
             {
-                $view->message = "Что то пошло не так";
+                $message = "Что то пошло не так";
             }
         }
         else
         {
-            $view->message = "Неверный запрос";   
+            $message = "Неверный запрос";   
         }
-        $html = $view->display('adminaddarticle.php');
-        echo $html;
+        $template = $this->twig->loadTemplate('adminviewmessage.html.twig');     
+        echo $template->render(array('menu' => $this->menu, 'message' => $message, ));
         
     }
-    protected function actionGet_ideditform(){
+    public function actionGet_ideditform(){
         
-        $template_path = __DIR__ . '/../views/';
-        
-        $view = new View($template_path);
-           
-        $html = $view->display('adminideditform.php');
-
-        echo $html;
+        $template = $this->twig->loadTemplate('admingetidform.html.twig');
+        $form['action'] = '/admin/get_editform';
+        $form['title']  = 'Редактировать новость';       
+        echo $template->render(array('menu' => $this->menu, 'form' => $form, ));
         
     }
-    protected function actionGet_editform(){
+    public function actionGet_editform(){
         
-        $template_path = __DIR__ . '/../views/';
-
-        $view = new View($template_path);
-        
+        $message=null;
+        $article=null;
+        $form=null;
         try{
-            $view->article = NewsModel::findByPk($_GET["id"]);
-            if(null === $view->article){
-                $view->message = "Нет такой новости";   
-            } 
+            $article = NewsModel::findByPk($_GET["id"]);
+            if(false === $article){
+                $message = "Нет такой новости";   
+            }
+            else 
+            {
+                $form['action'] = '/admin/edit';
+                $form['title']  = 'Редактируйте новость'; 
+            }
         }
-        catch(PDOException $e)
+        catch(\PDOException $e)
         {
-            $view->message = "Проверьте корректность ввода номера";   
+            $message = "Проверьте корректность ввода номера";   
         }
-        
-        $html = $view->display('admineditform.php');
-        echo $html;
+        $template = $this->twig->loadTemplate('admineditform.html.twig');
+        echo $template->render(array(
+            'menu' => $this->menu, 
+            'article' => $article,
+            'message' => $message,
+            'form' => $form,
+            ));
         
     }
-    protected function actionEdit(){
+    public function actionEdit(){
         
-        $template_path = __DIR__ . '/../views/';
         
-        $view = new View($template_path);
-        
+        $message=null;
         if(isset($_POST["title"])&&isset($_POST["text"]))
         {
             $news_model = new NewsModel();
@@ -143,19 +141,19 @@ class AdminController extends AController{
             
             try{
                 $news_model->save();
-                $view->message = "Новость изменена";
+                $message = "Новость изменена";
             }
-            catch(PDOExceptionException $e)
+            catch(\PDOException $e)
             {
-                $view->message = "Что то пошло не так";
+                $message = "Что то пошло не так";
             }
         }
         else
         {
-            $view->message = "Неверный запрос";   
+            $message = "Неверный запрос";   
         }
-        $html = $view->display('admineditarticle.php');
-        echo $html;
+        $template = $this->twig->loadTemplate('adminviewmessage.html.twig');     
+        echo $template->render(array('menu' => $this->menu, 'message' => $message, ));
   
     }
     
@@ -163,36 +161,31 @@ class AdminController extends AController{
     
     
     
-    protected function actionGet_deleteform(){
+    public function actionGet_deleteform(){
         
-        $template_path = __DIR__ . '/../views/';
-        
-        $view = new View($template_path);
-           
-        $html = $view->display('admindeleteform.php');
-
-        echo $html;
+        $template = $this->twig->loadTemplate('admingetidform.html.twig');
+        $form['action'] = '/admin/delete';
+        $form['title']  = 'Введите номер удаляемой новости';       
+        echo $template->render(array('menu' => $this->menu, 'form' => $form, ));
         
     }
-    protected function actionDelete(){
+    public function actionDelete(){
         
-        $template_path = __DIR__ . '/../views/';
-
-        $view = new View($template_path);
         
+        $message=null;
         try{
             
             NewsModel::deleteByPk($_GET["id"]);
-            $view->message = "Новость удалена";   
+            $message = "Новость ". $_GET["id"] . " удалена";   
              
         }
-        catch(PDOException $e)
+        catch(\PDOException $e)
         {
-            $view->message = "Проверьте корректность ввода номера";   
+            $message = "Проверьте корректность ввода номера";   
         }
+        $template = $this->twig->loadTemplate('adminviewmessage.html.twig');     
+        echo $template->render(array('menu' => $this->menu, 'message' => $message, ));
         
-        $html = $view->display('admindeletearticle.php');
-        echo $html; 
         
     }
 }

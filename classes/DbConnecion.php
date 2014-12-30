@@ -1,5 +1,9 @@
 <?php
 
+namespace Mynewsblog\classes;
+
+use PDO;
+
 class DbConnecion {
     
     private $dbh;
@@ -26,6 +30,16 @@ class DbConnecion {
         return $this->sth->fetchAll();
         
     }
+    
+        
+    
+    public function query_one($sql,$params=null){
+        $this->sth = $this->dbh->prepare($sql);
+        $this->sth->setFetchMode(PDO::FETCH_CLASS, ucfirst($this->table_name)."Model");
+        $this->sth->execute($params);
+        return $this->sth->fetch();
+    }
+    
     public function query_no_return($sql,$params=null){
         $this->sth = $this->dbh->prepare($sql);
         return $this->sth->execute($params);   

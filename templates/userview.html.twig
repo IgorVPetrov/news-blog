@@ -1,0 +1,10 @@
+{% extends "layout.html.twig" %}
+
+{% block content %}
+    <div id="page-index">
+        {{ parent() }} 
+        {% block content2 %} 
+        {% endblock %}
+    </div>
+{% endblock %}
+   

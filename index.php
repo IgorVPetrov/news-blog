@@ -1,14 +1,15 @@
 <?php
+
 require_once __DIR__ . '/boot.php';
 
-$router = new Router();
+use Mynewsblog\classes\Router as Router;
 
-try{
-   $controllerName = ucfirst($router->controller) . 'Controller';
-   $controller = new $controllerName;
-   $controller->action($router->action);
-}
-catch(Exception $e){
-   $controller = new ErrorController($e);
-   $controller->actionIndex(); 
-}
+
+$router = new Router();
+   
+$controllerName = 'Mynewsblog\controllers\\' .ucfirst($router->controller) . 'Controller';
+$controller = new $controllerName;
+$controller->action($router->action);
+
+
+   

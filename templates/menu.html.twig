@@ -1,0 +1,5 @@
+<ul id="{{ menu.id }}" class="{{ menu.class }}">
+    {% for route,descr in menu.elements %}
+        <li><a href="{{ route }}"><div>{{ descr }}</div></a></li>
+    {% endfor %}
+</ul>
