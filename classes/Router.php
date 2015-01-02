@@ -52,8 +52,8 @@ class Router{
 
     private function fillGET($array){
         
-        while(null !== $param = \array_pop($array)){
-            $_GET[$param] = \array_pop($array);
+        while(null !== $param = array_pop($array)){
+            $_GET[$param] = array_pop($array);
         }
     
     }

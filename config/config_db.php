@@ -4,7 +4,7 @@ return [
     
     'host' => 'localhost',
     'user' => 'root',
-    'password' => 'petrovigor',
+    'password' => '',
     'dbname' => 'test',
     'dsn' => 'mysql:dbname=test;host=localhost',
     
